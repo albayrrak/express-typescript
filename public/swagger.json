@@ -7,35 +7,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Photo": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"filename": {
-						"type": "string"
-					},
-					"isPublished": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"description",
-					"filename",
-					"isPublished"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"StatusCode": {
 				"enum": [
 					200,
@@ -46,16 +17,16 @@
 				],
 				"type": "number"
 			},
-			"BaseResponse_Photo_": {
+			"BaseResponse_boolean_": {
 				"properties": {
 					"data": {
 						"anyOf": [
 							{
-								"$ref": "#/components/schemas/Photo"
+								"type": "boolean"
 							},
 							{
 								"items": {
-									"$ref": "#/components/schemas/Photo"
+									"type": "boolean"
 								},
 								"type": "array"
 							}
@@ -80,6 +51,25 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"UserRequest": {
+				"properties": {
+					"lastname": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"lastname",
+					"name"
+				],
+				"type": "object"
 			}
 		},
 		"securitySchemes": {}
@@ -93,27 +83,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/ping": {
-			"get": {
-				"operationId": "GetMessage",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BaseResponse_Photo_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Ping"
-				],
-				"security": [],
-				"parameters": []
-			},
+		"/ping/create": {
 			"post": {
 				"operationId": "CreateUser",
 				"responses": {
@@ -122,7 +92,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/BaseResponse_Photo_"
+									"$ref": "#/components/schemas/BaseResponse_boolean_"
 								}
 							}
 						}
@@ -138,7 +108,39 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Photo"
+								"$ref": "#/components/schemas/UserRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/ping/update": {
+			"post": {
+				"operationId": "UpdateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Ping"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserRequest"
 							}
 						}
 					}

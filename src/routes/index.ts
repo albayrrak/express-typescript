@@ -1,19 +1,23 @@
 import express from "express";
-import PingController from "../controllers/ping";
-import { body } from "express-validator";
+import PingController from "../controllers/Ping";
+import { getRepository } from "typeorm";
+import { User } from "../entities/User";
+import { AppDataSource } from "../config/database";
 
 const router = express.Router();
 
-router.get("/ping", async (_req, res) => {
+router.post("/ping/create", async (req, res) => {
   const controller = new PingController();
-  const response = await controller.getMessage();
-  return res.send(response);
+  const test = await controller.createUser(req.body);
+
+  return res.json(test);
 });
 
-router.post("/ping", async (req, res) => {
+router.post("/ping/update", async (req, res) => {
   const controller = new PingController();
-  const response = await controller.createUser(req.body);
-  return res.send(response);
+  const test = await controller.updateUser(req.body);
+
+  return res.json(test);
 });
 
 export default router;
