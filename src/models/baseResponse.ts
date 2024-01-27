@@ -12,7 +12,12 @@ export class BaseResponse<T> {
   statusCode: StatusCode;
   message: string;
 
-  constructor(data: T | T[] | null, success: boolean, statusCode: StatusCode, message: any) {
+  constructor(
+    data: T | T[] | null,
+    success: boolean,
+    statusCode: StatusCode,
+    message: any
+  ) {
     this.data = data;
     this.success = success;
     this.statusCode = statusCode;

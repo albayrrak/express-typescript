@@ -9,7 +9,7 @@ export class BaseService<T> implements IWrite<T>, IRead<T> {
     this.repository = repository;
   }
 
-  async create(item: T): Promise<boolean> {
+  async create(item: T): Promise<T> {
     return await this.repository.create(item);
   }
 

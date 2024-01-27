@@ -1,28 +1,22 @@
-import { validationResult, ValidationChain } from "express-validator";
-import { Request, Response, NextFunction } from "express";
+import { ContextRunner, validationResult } from "express-validator";
+import express from "express";
+import { BaseResponse, StatusCode } from "../models/BaseResponse";
 
-class BaseValidator<T> {
-  private validators: ValidationChain[];
+export const validate = (validations: ContextRunner[]) => {
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    for (let validation of validations) {
+      const result: any = await validation.run(req);
+      if (result.errors.length) break;
+    }
 
-  constructor(validators: ValidationChain[]) {
-    this.validators = validators;
-  }
+    const errors = validationResult(req);
+    console.log(errors);
 
-  validate(req: Request, res: Response, next: NextFunction): void {
-    Promise.all(this.validators.map((validator) => validator.run(req)))
-      .then(() => {
-        const errors = validationResult(req);
-        if (errors.isEmpty()) {
-          next();
-        } else {
-          const errorMessages = errors.array().map((error) => error.msg);
-          const errorMessage = errorMessages.join(", ");
-        }
-      })
-      .catch((err) => {
-        next(err);
-      });
-  }
-}
+    if (errors.isEmpty()) {
+      return next();
+    }
+    const response = new BaseResponse(null, false, StatusCode.BadRequest, errors);
 
-export default BaseValidator;
+    res.status(400).json(response);
+  };
+};

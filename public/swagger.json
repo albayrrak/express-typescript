@@ -7,67 +7,185 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"StatusCode": {
+			"CurrentStatus": {
 				"enum": [
-					200,
-					400,
-					401,
-					404,
-					500
+					"passive",
+					"rejected",
+					"pending"
 				],
-				"type": "number"
+				"type": "string"
 			},
-			"BaseResponse_boolean_": {
+			"AppliedForRole": {
+				"enum": [
+					"default",
+					"artist",
+					"curator",
+					"gallery"
+				],
+				"type": "string"
+			},
+			"Status": {
 				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"type": "boolean"
-							},
-							{
-								"items": {
-									"type": "boolean"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
+					"id": {
+						"type": "string"
 					},
-					"success": {
-						"type": "boolean"
+					"currentStatus": {
+						"$ref": "#/components/schemas/CurrentStatus"
 					},
-					"statusCode": {
-						"$ref": "#/components/schemas/StatusCode"
+					"appliedForRole": {
+						"$ref": "#/components/schemas/AppliedForRole"
 					},
-					"message": {
+					"appliedForCategory": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"data",
-					"success",
-					"statusCode",
-					"message"
+					"appliedForCategory"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"UserRequest": {
+			"RegisterResponseModel": {
 				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"approvedBy": {
+						"type": "string"
+					},
+					"instagram": {
+						"type": "string"
+					},
+					"mirrorxyz": {
+						"type": "string"
+					},
+					"linkedIn": {
+						"type": "string"
+					},
+					"facebook": {
+						"type": "string"
+					},
+					"twitter": {
+						"type": "string"
+					},
+					"website": {
+						"type": "string"
+					},
+					"nonce": {
+						"type": "string"
+					},
+					"bannerHash": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"totalSales": {
+						"type": "number",
+						"format": "double"
+					},
+					"role": {
+						"type": "string"
+					},
+					"isVerified": {
+						"type": "boolean"
+					},
+					"biography": {
+						"type": "string"
+					},
+					"publicAddress": {
+						"type": "string"
+					},
 					"lastname": {
 						"type": "string"
 					},
 					"name": {
 						"type": "string"
 					},
-					"id": {
-						"type": "number",
-						"format": "double"
+					"email": {
+						"type": "string"
 					}
 				},
 				"required": [
+					"totalSales",
+					"role",
+					"isVerified",
+					"publicAddress",
 					"lastname",
-					"name"
+					"name",
+					"email"
+				],
+				"type": "object"
+			},
+			"RegisterRequestModel": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"approvedBy": {
+						"type": "string"
+					},
+					"instagram": {
+						"type": "string"
+					},
+					"mirrorxyz": {
+						"type": "string"
+					},
+					"linkedIn": {
+						"type": "string"
+					},
+					"facebook": {
+						"type": "string"
+					},
+					"twitter": {
+						"type": "string"
+					},
+					"website": {
+						"type": "string"
+					},
+					"nonce": {
+						"type": "string"
+					},
+					"bannerHash": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"totalSales": {
+						"type": "number",
+						"format": "double"
+					},
+					"role": {
+						"type": "string"
+					},
+					"isVerified": {
+						"type": "boolean"
+					},
+					"biography": {
+						"type": "string"
+					},
+					"publicAddress": {
+						"type": "string"
+					},
+					"lastname": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"totalSales",
+					"role",
+					"isVerified",
+					"publicAddress",
+					"lastname",
+					"name",
+					"email"
 				],
 				"type": "object"
 			}
@@ -83,23 +201,28 @@
 		"contact": {}
 	},
 	"paths": {
-		"/ping/create": {
+		"/authentication/register": {
 			"post": {
-				"operationId": "CreateUser",
+				"operationId": "Register",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/BaseResponse_boolean_"
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/RegisterResponseModel"
+										}
+									],
+									"nullable": true
 								}
 							}
 						}
 					}
 				},
 				"tags": [
-					"Ping"
+					"Authentication"
 				],
 				"security": [],
 				"parameters": [],
@@ -108,39 +231,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/ping/update": {
-			"post": {
-				"operationId": "UpdateUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BaseResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Ping"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UserRequest"
+								"$ref": "#/components/schemas/RegisterRequestModel"
 							}
 						}
 					}

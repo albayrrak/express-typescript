@@ -1,11 +1,10 @@
 import "reflect-metadata";
-import { createConnection } from "typeorm";
 import express, { Application } from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
-import { AppDataSource } from "./config/database";
+import { AppDataSource } from "./config/Database";
 
-import Router from "./routes";
+import AuthRoute from "./routes/authentication";
 const PORT = process.env.PORT || 8000;
 
 const app: Application = express();
@@ -24,7 +23,7 @@ app.use(
   })
 );
 
-app.use(Router);
+app.use(AuthRoute);
 
 AppDataSource.initialize()
   .then(() => {

@@ -11,13 +11,13 @@ export abstract class BaseRepository<T extends ObjectLiteral> implements IWrite<
     this.entity = entity;
   }
 
-  async create(item: T): Promise<boolean> {
+  async create(item: T): Promise<T> {
     try {
-      await this.repository.save(this.entity, item);
-      return true;
+      const newData = await this.repository.save(this.entity, item);
+      return newData;
     } catch (error) {
       console.error("Error creating item:", error);
-      return false;
+      throw new Error("error");
     }
   }
 
